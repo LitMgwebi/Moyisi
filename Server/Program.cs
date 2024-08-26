@@ -1,5 +1,5 @@
-using Server.Models;
-using Server.Services.UserService;
+global using Server.Models;
+global using Server.Services.UserService;
 
 var builder = WebApplication.CreateBuilder(args);
 

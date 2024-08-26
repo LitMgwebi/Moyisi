@@ -6,17 +6,23 @@
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; } = null!;
+        public string Id { get; set; }
         public string Username { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string PasswordHash { get; set; } = null!;
         public string? Bio { get; set; }
         public string? ProfilePictureUrl { get; set; }
+        public bool isActive { get; set; } = true;
 
         //TODO Find a way to initialise Social links in this model, via Dictionary or find a noSQl replacement for many:1
-        [BsonRepresentation(BsonType.Timestamp)]
+        //[BsonRepresentation(BsonType.Timestamp)]
         public DateTime? CreatedAt { get; set; }
-        [BsonRepresentation(BsonType.Timestamp)]
+        //[BsonRepresentation(BsonType.Timestamp)]
         public DateTime? UpdatedAt { get; set; }
+
+        public void GenerateId()
+        {
+            this.Id = ObjectId.GenerateNewId().ToString();
         }
+    }
 }
