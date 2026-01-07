@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxt/image": "^2.0.0",
     "@tailwindcss/vite": "^4.1.18",
     "lucide-vue-next": "^0.562.0",
     "nuxt": "^4.2.2",
