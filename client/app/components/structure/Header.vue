@@ -10,7 +10,7 @@
           :enter="{ opacity: 1, x: 0 }"
           class="text-xl font-semibold"
         >
-          Artist Portfolio
+          Moyisi
         </div>
 
         <div class="hidden md:flex space-x-8">

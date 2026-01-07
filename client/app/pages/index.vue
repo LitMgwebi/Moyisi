@@ -1,5 +1,4 @@
 <template>
-  <div class="container">
-    <Hero />
-  </div>
+  <Hero />
+  <AnimationShowcase />
 </template>
