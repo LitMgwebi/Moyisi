@@ -15,6 +15,7 @@
     :items="paintings"
     bgColor="bg-white"
   />
+  <Contact />
 </template>
 
 <script setup>
