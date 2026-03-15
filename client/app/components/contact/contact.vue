@@ -4,7 +4,7 @@
     class="py-20 bg-gradient-to-br from-purple-50 via-white to-blue-50"
   >
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <!-- Wrapper -->
+      <!-- Wrapper --><ClientOnly>
       <div
         v-motion
         v-intersect.once
@@ -20,6 +20,7 @@
         </p>
 
         <!-- CTA -->
+         <ClientOnly>
         <a
           href="mailto:artist@example.com"
           v-motion
@@ -30,9 +31,10 @@
           <Mail :size="24" />
           Get in Touch
         </a>
-
+         </ClientOnly>
         <!-- Socials -->
         <div class="flex justify-center gap-6 mt-8">
+          <ClientOnly>
           <a
             v-for="(social, index) in socials"
             :key="social.label"
@@ -48,8 +50,10 @@
           >
             <component :is="social.icon" :size="20" />
           </a>
+        </ClientOnly>
         </div>
       </div>
+    </ClientOnly>
     </div>
   </section>
 </template>
