@@ -2,6 +2,7 @@
   <section id="animations" class="py-20 bg-black text-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Section header -->
+      <ClientOnly>
       <div
         v-motion
         :initial="{ opacity: 0, y: 30 }"
@@ -23,11 +24,13 @@
           graphics
         </p>
       </div>
+      </ClientOnly>
 
       <!-- Grid -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <ClientOnly>
         <div
-          v-for="(animation, index) in animations"
+          v-for="(animation, index) in items"
           :key="animation.id"
           v-motion
           v-intersect.once
@@ -36,7 +39,6 @@
           :transition="{ duration: 0.6, delay: index * 0.1 }"
           :class="[
             'relative group cursor-pointer',
-            animation.featured ? 'lg:col-span-2' : '',
           ]"
         >
           <div
@@ -55,6 +57,7 @@
             />
 
             <!-- Play button -->
+            <ClientOnly>
             <div
               v-motion
               :hovered="{ scale: 1.1 }"
@@ -66,16 +69,16 @@
                 <Play :size="32" class="text-white ml-1" fill="white" />
               </div>
             </div>
-
+          </ClientOnly>
             <!-- Info -->
             <div class="absolute bottom-0 left-0 right-0 p-6">
               <div class="flex items-center gap-2 mb-2">
-                <span
+                <!-- <span
                   v-if="animation.featured"
                   class="px-3 py-1 bg-yellow-400 text-black text-xs rounded-full"
                 >
                   Featured
-                </span>
+                </span> -->
 
                 <span
                   class="px-3 py-1 bg-white/20 backdrop-blur-sm text-white text-xs rounded-full"
@@ -89,50 +92,26 @@
             </div>
           </div>
         </div>
+        </ClientOnly>
       </div>
     </div>
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Award, Play } from 'lucide-vue-next'
 
-const animations = [
-  {
-    id: 1,
-    title: 'Character Animation Reel',
-    description: 'Dynamic character movements and expressions',
-    thumbnail:
-      'https://images.unsplash.com/photo-1600447766334-36a93f35a21d?...',
-    duration: '2:45',
-    featured: true,
-  },
-  {
-    id: 2,
-    title: 'Motion Graphics Compilation',
-    description: 'Abstract shapes and fluid transitions',
-    thumbnail:
-      'https://images.unsplash.com/photo-1736175549681-c24c552da1e2?...',
-    duration: '1:30',
-    featured: false,
-  },
-  {
-    id: 3,
-    title: 'Short Film: "Dreamscape"',
-    description: 'A journey through surreal landscapes',
-    thumbnail:
-      'https://images.unsplash.com/photo-1647792845543-a8032c59cbdf?...',
-    duration: '5:12',
-    featured: true,
-  },
-  {
-    id: 4,
-    title: 'Logo Animation Collection',
-    description: 'Brand identity in motion',
-    thumbnail:
-      'https://images.unsplash.com/photo-1649783467344-4dfdb3b55036?...',
-    duration: '0:45',
-    featured: false,
-  },
-]
+type GalleryItem = {
+  id: number
+  url: string
+  title: string
+  type: string
+  description: string
+  duration: string,
+  thumbnail: string
+}
+
+const props = defineProps<{
+  items: GalleryItem[]
+}>()
 </script>

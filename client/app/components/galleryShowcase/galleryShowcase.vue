@@ -2,6 +2,7 @@
   <section :id="id" :class="['py-20', bgColor]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Section header -->
+       <ClientOnly>
       <div
         v-motion
         v-intersect.once
@@ -15,9 +16,10 @@
           {{ description }}
         </p>
       </div>
-
+    </ClientOnly>
       <!-- Masonry -->
       <div class="masonry">
+      <ClientOnly>
         <div
           v-for="(item, index) in items"
           :key="item.id"
@@ -30,7 +32,7 @@
           class="masonry-item group relative overflow-hidden rounded-lg cursor-pointer"
         >
           <NuxtImg
-            :src="item.image"
+            :src="item.url"
             :alt="item.title"
             loading="lazy"
             class="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-110"
@@ -42,21 +44,23 @@
           >
             <div class="text-white text-center p-4">
               <h3 class="text-xl mb-2">{{ item.title }}</h3>
-              <p class="text-sm text-gray-300">{{ item.category }}</p>
+              <p class="text-sm text-gray-300">{{ item.description }}</p>
             </div>
           </div>
         </div>
+      </ClientOnly>
       </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-interface GalleryItem {
+type GalleryItem = {
   id: number
-  image: string
+  url: string
   title: string
-  category: string
+  type: string
+  description: string
 }
 
 const props = defineProps<{

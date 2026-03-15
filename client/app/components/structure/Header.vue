@@ -1,43 +1,28 @@
 <template>
-  <header
-    class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200"
-  >
+  <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
     <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
-        <div
-          v-motion
-          :initial="{ opacity: 0, x: -20 }"
-          :enter="{ opacity: 1, x: 0 }"
-          class="text-xl font-semibold"
-        >
-          Moyisi
-        </div>
-
-        <div class="hidden md:flex space-x-8">
-          <NuxtLink
-            v-for="(item, index) in navItems"
-            :key="item.name"
-            :to="item.href"
-            v-motion
-            :initial="{ opacity: 0, y: -10 }"
-            :enter="{ opacity: 1, y: 0 }"
-            :transition="{ delay: index * 0.1 }"
-            class="text-gray-700 hover:text-black transition-colors"
-          >
-            {{ item.name }}
-          </NuxtLink>
-        </div>
-
-        <v-btn
-          variant="text"
-          class="md:hidden p-2"
-          @click="mobileMenuOpen = !mobileMenuOpen"
-          icon
-        >
+        <ClientOnly>
+          <div v-motion :initial="{ opacity: 0, x: -20 }" :enter="{ opacity: 1, x: 0 }" class="text-xl font-semibold">
+            Moyisi
+          </div>
+        </ClientOnly>
+        <ClientOnly>
+          <div class="hidden md:flex space-x-8">
+            <NuxtLink v-for="(item, index) in navItems" :key="item.name" :to="item.href" v-motion
+              :initial="{ opacity: 0, y: -10 }" :enter="{ opacity: 1, y: 0 }" :transition="{ delay: index * 0.1 }"
+              class="text-gray-700 hover:text-black transition-colors">
+              {{ item.name }}
+            </NuxtLink>
+          </div>
+        </ClientOnly>
+        <button variant="text" class="md:hidden p-2" @click="mobileMenuOpen = !mobileMenuOpen" icon>
           <component :is="mobileMenuOpen ? X : Menu" :size="24" />
-        </v-btn>
+        </button>
       </div>
 
+      <!-- 
+      <ClientOnly>
       <div
         v-if="mobileMenuOpen"
         v-motion
@@ -58,7 +43,8 @@
             {{ item.name }}
           </NuxtLink>
         </div>
-      </div>
+      </div> 
+      </ClientOnly>-->
     </nav>
   </header>
 </template>

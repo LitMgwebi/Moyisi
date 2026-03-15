@@ -5,6 +5,7 @@
   >
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <!-- Heading -->
+       <ClientOnly>
       <h1
         v-motion
         :initial="{ opacity: 0, y: 30 }"
@@ -14,8 +15,10 @@
       >
         Creative Artist & Animator
       </h1>
+       </ClientOnly>
 
       <!-- Subheading -->
+       <ClientOnly>
       <p
         v-motion
         :initial="{ opacity: 0, y: 30 }"
@@ -26,8 +29,9 @@
         Bringing imagination to life through digital art, traditional paintings,
         and captivating animations
       </p>
-
+       </ClientOnly>
       <!-- CTA buttons -->
+       <ClientOnly>
       <div
         v-motion
         :initial="{ opacity: 0, y: 30 }"
@@ -49,8 +53,9 @@
           Explore Gallery
         </NuxtLink>
       </div>
-
+    </ClientOnly>
       <!-- Scroll indicator -->
+       <ClientOnly>
       <div
         v-motion
         :initial="{ opacity: 0 }"
@@ -59,6 +64,7 @@
         class="mt-20"
       >
         <NuxtLink to="#animations" class="inline-block">
+          <ClientOnly>
           <div
             v-motion
             :animate="{ y: [0, 10, 0] }"
@@ -66,8 +72,10 @@
           >
             <ChevronDown size="32" class="text-gray-400" />
           </div>
+        </ClientOnly>
         </NuxtLink>
       </div>
+    </ClientOnly>
     </div>
   </section>
 </template>
