@@ -1,6 +1,6 @@
 <template>
   <Hero />
-  <AnimationShowcase  :items="animations"/>
+  <AnimationShowcase />
   <GalleryShowcase id="digital-artworks" title="Digital Artworks"
     description="A curated selection of stunning digital artworks showcasing creativity and innovation."
     :items="digitalArtworks" bgColor="bg-gray-100" />
@@ -10,6 +10,10 @@
 </template>
 
 <script setup>
+
+//TODO: I need to add loading skeletons and error handling for these fetches
+//TODO: Ask Xola for more details of his profile.
+//TODO: Fix motion and intersection errors
 const {
   data: digitalArtworks,
   pending: digitalArtworksPending,
@@ -24,13 +28,5 @@ const {
   error: paintingsErrors,
 } = await useFetch('/api/artwork', {
   query: { category: 'paintings' },
-})
-
-const {
-  data: animations,
-  pending: animationsPending,
-  error: animationsErrors,
-} = await useFetch('/api/artwork', {
-  query: { category: 'animations' },
 })
 </script>
