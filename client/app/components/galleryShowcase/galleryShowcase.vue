@@ -1,14 +1,10 @@
 <template>
   <section :id="id" :class="['py-20', bgColor]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
       <!-- Section header -->
-       <ClientOnly>
       <div
-        v-motion
-        v-intersect.once
-        :initial="{ opacity: 0, y: 30 }"
-        :enter="{ opacity: 1, y: 0 }"
-        :transition="{ duration: 0.6 }"
+        v-motion="fadeInMotion"
         class="text-center mb-16"
       >
         <h2 class="text-4xl sm:text-5xl mb-4">{{ title }}</h2>
@@ -16,19 +12,13 @@
           {{ description }}
         </p>
       </div>
-    </ClientOnly>
+
       <!-- Masonry -->
       <div class="masonry">
-      <ClientOnly>
         <div
           v-for="(item, index) in items"
           :key="item.id"
-          v-motion
-          v-intersect.once
-          :initial="{ opacity: 0, y: 30 }"
-          :enter="{ opacity: 1, y: 0 }"
-          :transition="{ duration: 0.6, delay: index * 0.05 }"
-          :hovered="{ y: -8 }"
+          v-motion="getItemMotion(index)"
           class="masonry-item group relative overflow-hidden rounded-lg cursor-pointer"
         >
           <NuxtImg
@@ -48,8 +38,8 @@
             </div>
           </div>
         </div>
-      </ClientOnly>
       </div>
+
     </div>
   </section>
 </template>
@@ -72,10 +62,24 @@ const props = defineProps<{
 }>()
 
 const bgColor = props.bgColor ?? 'bg-white'
+
+// ✅ Static motion config (no conditionals)
+const fadeInMotion = {
+  initial: { opacity: 0, y: 30 },
+  enter: { opacity: 1, y: 0 },
+  transition: { duration: 0.6 }
+}
+
+// ✅ Dynamic per-item motion (for stagger)
+const getItemMotion = (index: number) => ({
+  initial: { opacity: 0, y: 30 },
+  enter: { opacity: 1, y: 0 },
+  transition: { duration: 0.6, delay: index * 0.05 },
+  hovered: { y: -8 }
+})
 </script>
 
 <style scoped>
-/* Simple CSS Masonry (SSR-safe) */
 .masonry {
   column-count: 1;
   column-gap: 1.5rem;

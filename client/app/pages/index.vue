@@ -12,8 +12,6 @@
 <script setup>
 
 //TODO: I need to add loading skeletons and error handling for these fetches
-//TODO: Ask Xola for more details of his profile.
-//TODO: Fix motion and intersection errors
 const {
   data: digitalArtworks,
   pending: digitalArtworksPending,

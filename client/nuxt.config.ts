@@ -2,7 +2,7 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ['@nuxt/image'],
+  modules: ['@nuxt/image', '@nuxt/ui'],
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   css: ['./app/assets/css/main.css'],
@@ -13,6 +13,7 @@ export default defineNuxtConfig({
         'lucide-vue-next',
         '@vue/devtools-core',
         '@vue/devtools-kit',
+        '@vueuse/motion',
       ]
     }
   },
