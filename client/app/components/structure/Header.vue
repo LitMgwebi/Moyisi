@@ -6,7 +6,7 @@
         <!-- Logo -->
         <div
           v-motion="logoMotion"
-          class="text-xl font-semibold"
+          class="text-xl font-semibold text-black"
         >
           Moyisi
         </div>
@@ -35,7 +35,7 @@
       </div>
 
       <!-- Mobile Menu -->
-      <!--
+      
       <div
         v-if="mobileMenuOpen"
         v-motion="mobileMenuMotion"
@@ -53,7 +53,7 @@
           </NuxtLink>
         </div>
       </div>
-      -->
+     
 
     </nav>
   </header>
@@ -79,7 +79,7 @@ const mobileMenuMotion = {
   initial: { opacity: 0, height: 0 },
   enter: { opacity: 1, height: 'auto' },
   leave: { opacity: 0, height: 0 },
-  transition: { duration: 0.25, ease: 'easeOut' }
+  transition: { duration: 0.25 } 
 }
 
 // State

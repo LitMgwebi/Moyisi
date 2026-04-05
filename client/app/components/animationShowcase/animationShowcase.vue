@@ -23,35 +23,20 @@
 
       <!-- Error Message -->
       <div
-        v-if="animationsErrors"
+        v-if="error"
         class="mb-8 p-4 bg-red-500/10 border border-red-500/50 rounded-lg text-red-400 text-center"
       >
-        {{ animationsErrors }}
+        <UBanner color="error" icon="i-lucide-info" :title="error.data.message" />
       </div>
 
       <!-- Grid -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-        <!-- Skeleton Loaders -->
-        <div
-          v-if="animationsPending"
-          v-for="index in 2"
-          :key="`skeleton-${index}`"
-          class="relative overflow-hidden rounded-2xl aspect-video bg-gray-800 animate-pulse"
-        >
-          <div class="w-full h-full bg-gray-700" />
-
-          <div class="absolute bottom-0 left-0 right-0 p-6 space-y-2">
-            <div class="h-4 bg-gray-600 rounded w-20" />
-            <div class="h-6 bg-gray-600 rounded w-3/4" />
-            <div class="h-4 bg-gray-600 rounded w-full" />
-          </div>
-        </div>
 
         <!-- Actual Animation Cards -->
         <div
-          v-if="!animationsPending"
-          v-for="(animation, index) in animations"
+          v-if="!isLoading && items && items.length && !error"
+          v-for="(animation, index) in items"
           :key="animation.id"
           v-motion="getItemMotion(index as number)"
           class="relative group cursor-pointer"
@@ -98,6 +83,22 @@
               <p class="text-gray-300">{{ animation.description }}</p>
             </div>
 
+          </div>
+        </div>
+
+        <!-- Skeleton Loaders -->
+        <div
+          v-else
+          v-for="index in 2"
+          :key="`skeleton-${index}`"
+          class="relative overflow-hidden rounded-2xl aspect-video bg-gray-800 animate-pulse"
+        >
+          <USkeleton class="w-full h-full rounded-2xl" />
+
+          <div class="absolute bottom-0 left-0 right-0 p-6 space-y-2">
+            <USkeleton class="h-4 w-20" />
+            <USkeleton class="h-6 w-3/4" />
+            <USkeleton class="h-4 w-full" />
           </div>
         </div>
       </div>
@@ -165,17 +166,17 @@
 <script setup lang="ts">
 import { Award, Play } from 'lucide-vue-next'
 import { ref, nextTick, onMounted, onUnmounted } from 'vue'
+import type { GalleryItem } from '@/assets/types'
+import type { FetchError } from 'ofetch'
 
 const selectedAnimation = ref<any>(null)
 const videoPlayer = ref<HTMLVideoElement | null>(null)
 
-const {
-  data: animations,
-  pending: animationsPending,
-  error: animationsErrors,
-} = await useFetch('/api/artwork', {
-  query: { category: 'animations' },
-})
+  const props = defineProps<{
+  items?: GalleryItem[]
+  isLoading?: ComputedRef<boolean>
+  error?: FetchError<any> | null
+}>()
 
 // ✅ Motion configs
 const fadeInMotion = {

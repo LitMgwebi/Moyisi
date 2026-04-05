@@ -8,7 +8,7 @@
       <!-- Heading -->
       <h1
         v-motion="headingMotion"
-        class="text-5xl sm:text-6xl lg:text-7xl mb-6"
+        class="text-5xl sm:text-6xl lg:text-7xl mb-6 text-black"
       >
         Creative Artist & Animator
       </h1>
