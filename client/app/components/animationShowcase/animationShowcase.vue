@@ -1,14 +1,10 @@
 <template>
   <section id="animations" class="py-20 bg-black text-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
       <!-- Section header -->
-      <ClientOnly>
       <div
-        v-motion
-        :initial="{ opacity: 0, y: 30 }"
-        :enter="{ opacity: 1, y: 0 }"
-        :transition="{ duration: 0.6 }"
-        v-intersect.once
+        v-motion="fadeInMotion"
         class="text-center mb-16"
       >
         <div class="flex items-center justify-center gap-2 mb-4">
@@ -26,57 +22,28 @@
       </div>
 
       <!-- Error Message -->
-      <ClientOnly>
       <div
-        v-if="animationsErrors"
+        v-if="error"
         class="mb-8 p-4 bg-red-500/10 border border-red-500/50 rounded-lg text-red-400 text-center"
       >
-        {{ animationsErrors }}
+        <UBanner color="error" icon="i-lucide-info" :title="error.data.message" />
       </div>
-      </ClientOnly>
-      </ClientOnly>
 
       <!-- Grid -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- Skeleton Loaders -->
-        <ClientOnly>
-        <div
-          v-if="animationsPending"
-          v-for="index in 2"
-          :key="`skeleton-${index}`"
-          class="relative overflow-hidden rounded-2xl aspect-video bg-gray-800 animate-pulse"
-        >
-          <!-- Skeleton thumbnail -->
-          <div class="w-full h-full bg-gray-700" />
 
-          <!-- Skeleton info -->
-          <div class="absolute bottom-0 left-0 right-0 p-6 space-y-2">
-            <div class="h-4 bg-gray-600 rounded w-20" />
-            <div class="h-6 bg-gray-600 rounded w-3/4" />
-            <div class="h-4 bg-gray-600 rounded w-full" />
-          </div>
-        </div>
-        </ClientOnly>
 
         <!-- Actual Animation Cards -->
-        <ClientOnly>
         <div
-          v-if="!animationsPending"
-          v-for="(animation, index) in animations"
+          v-if="!isLoading && items && items.length && !error"
+          v-for="(animation, index) in items"
           :key="animation.id"
-          v-motion
-          v-intersect.once
-          :initial="{ opacity: 0, y: 30 }"
-          :enter="{ opacity: 1, y: 0 }"
-          :transition="{ duration: 0.6, delay: (index as number) * 0.1 }"
-          :class="[
-            'relative group cursor-pointer',
-          ]"
+          v-motion="getItemMotion(index as number)"
+          class="relative group cursor-pointer"
           @click="openVideo(animation)"
         >
-          <div
-            class="relative overflow-hidden rounded-2xl aspect-video bg-gray-900"
-          >
+          <div class="relative overflow-hidden rounded-2xl aspect-video bg-gray-900">
+
             <!-- Thumbnail -->
             <img
               :src="animation.thumbnail"
@@ -90,10 +57,9 @@
             />
 
             <!-- Play button -->
-            <ClientOnly>
             <div
               v-motion
-              :hovered="{ scale: 1.1 }"
+              :while-hover="{ scale: 1.1 }"
               class="absolute inset-0 flex items-center justify-center"
             >
               <div
@@ -102,7 +68,7 @@
                 <Play :size="32" class="text-white ml-1" fill="white" />
               </div>
             </div>
-          </ClientOnly>
+
             <!-- Info -->
             <div class="absolute bottom-0 left-0 right-0 p-6">
               <div class="flex items-center gap-2 mb-2">
@@ -116,14 +82,29 @@
               <h3 class="text-2xl mb-2">{{ animation.title }}</h3>
               <p class="text-gray-300">{{ animation.description }}</p>
             </div>
+
           </div>
         </div>
-        </ClientOnly>
+
+        <!-- Skeleton Loaders -->
+        <div
+          v-else
+          v-for="index in 2"
+          :key="`skeleton-${index}`"
+          class="relative overflow-hidden rounded-2xl aspect-video bg-gray-800 animate-pulse"
+        >
+          <USkeleton class="w-full h-full rounded-2xl" />
+
+          <div class="absolute bottom-0 left-0 right-0 p-6 space-y-2">
+            <USkeleton class="h-4 w-20" />
+            <USkeleton class="h-6 w-3/4" />
+            <USkeleton class="h-4 w-full" />
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Video Modal -->
-    <ClientOnly>
     <Teleport to="body">
       <Transition name="fade">
         <div
@@ -132,6 +113,7 @@
           @click.self="closeVideo"
         >
           <div class="w-full max-w-5xl relative">
+
             <!-- Close button -->
             <button
               @click="closeVideo"
@@ -153,7 +135,7 @@
               </svg>
             </button>
 
-            <!-- Video container -->
+            <!-- Video -->
             <div class="rounded-2xl overflow-hidden aspect-video bg-black">
               <video
                 ref="videoPlayer"
@@ -164,37 +146,54 @@
               />
             </div>
 
-            <!-- Video info -->
+            <!-- Info -->
             <div class="mt-6">
-              <h3 class="text-2xl text-white mb-2">{{ selectedAnimation.title }}</h3>
-              <p class="text-gray-300">{{ selectedAnimation.description }}</p>
+              <h3 class="text-2xl text-white mb-2">
+                {{ selectedAnimation.title }}
+              </h3>
+              <p class="text-gray-300">
+                {{ selectedAnimation.description }}
+              </p>
             </div>
+
           </div>
         </div>
       </Transition>
     </Teleport>
-    </ClientOnly>
   </section>
 </template>
 
 <script setup lang="ts">
 import { Award, Play } from 'lucide-vue-next'
 import { ref, nextTick, onMounted, onUnmounted } from 'vue'
+import type { GalleryItem } from '@/assets/types'
+import type { FetchError } from 'ofetch'
 
 const selectedAnimation = ref<any>(null)
 const videoPlayer = ref<HTMLVideoElement | null>(null)
 
-const {
-  data: animations,
-  pending: animationsPending,
-  error: animationsErrors,
-} = await useFetch('/api/artwork', {
-  query: { category: 'animations' },
+  const props = defineProps<{
+  items?: GalleryItem[]
+  isLoading?: ComputedRef<boolean>
+  error?: FetchError<any> | null
+}>()
+
+// ✅ Motion configs
+const fadeInMotion = {
+  initial: { opacity: 0, y: 30 },
+  enter: { opacity: 1, y: 0 },
+  transition: { duration: 0.6 }
+}
+
+const getItemMotion = (index: number) => ({
+  initial: { opacity: 0, y: 30 },
+  enter: { opacity: 1, y: 0 },
+  transition: { duration: 0.6, delay: index * 0.1 }
 })
 
+// Video logic
 const openVideo = (animation: any) => {
   selectedAnimation.value = animation
-  // Auto-focus for keyboard controls
   nextTick(() => {
     videoPlayer.value?.focus()
   })
@@ -207,7 +206,7 @@ const closeVideo = () => {
   selectedAnimation.value = null
 }
 
-// Close video on Escape key
+// Escape key
 onMounted(() => {
   const handleKeydown = (e: KeyboardEvent) => {
     if (e.key === 'Escape' && selectedAnimation.value) {
@@ -215,6 +214,7 @@ onMounted(() => {
     }
   }
   window.addEventListener('keydown', handleKeydown)
+
   onUnmounted(() => {
     window.removeEventListener('keydown', handleKeydown)
   })

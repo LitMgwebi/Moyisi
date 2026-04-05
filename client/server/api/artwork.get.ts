@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
         statusMessage: 'Invalid artwork category',
       })
     }
-  
+    
     const folder = `artwork/${category}`
   
     const result = await cloudinary.search
