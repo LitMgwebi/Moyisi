@@ -42,20 +42,7 @@
         </NuxtLink>
       </div>
 
-      <!-- Scroll indicator -->
-      <div
-        v-motion="fadeInDelayed"
-        class="mt-20"
-      >
-        <NuxtLink to="#animations" class="inline-block">
-          <div
-            v-motion="bounceMotion"
-          >
-            <!-- <ChevronDown :size="32" class="text-gray-400" /> -->
-             HI
-          </div>
-        </NuxtLink>
-      </div>
+     
 
     </div>
   </section>
