@@ -18,7 +18,8 @@
 
         <!-- CTA -->
         <a
-          href="mailto:artist@example.com"
+          v-if="env.contactEmail"
+          :href="`mailto:${env.contactEmail}`"
           v-motion
           :while-hover="{ scale: 1.05 }"
           :while-tap="{ scale: 0.95 }"
@@ -29,11 +30,13 @@
         </a>
 
         <!-- Socials -->
-        <div class="flex justify-center gap-6 mt-8">
+        <div v-if="socials.length" class="flex justify-center gap-6 mt-8">
           <a
             v-for="(social, index) in socials"
             :key="social.label"
             :href="social.href"
+            target="_blank"
+            rel="noopener noreferrer"
             v-motion="getSocialMotion(index)"
             :while-hover="{ scale: 1.1 }"
             class="w-12 h-12 rounded-full bg-white border-2 border-gray-200 flex items-center justify-center hover:border-black transition-colors"
@@ -65,9 +68,12 @@ const getSocialMotion = (index) => ({
 })
 
 // Data
+const { public: env } = useRuntimeConfig()
+
+// Only socials with a configured URL are rendered
 const socials = [
-  { icon: Instagram, href: '#', label: 'Instagram' },
-  { icon: Twitter, href: '#', label: 'Twitter' },
-  { icon: Linkedin, href: '#', label: 'LinkedIn' },
-]
+  { icon: Instagram, href: env.instagramUrl, label: 'Instagram' },
+  { icon: Twitter, href: env.twitterUrl, label: 'Twitter' },
+  { icon: Linkedin, href: env.linkedinUrl, label: 'LinkedIn' },
+].filter((social) => social.href)
 </script>

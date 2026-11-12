@@ -1,4 +1,10 @@
 import tailwindcss from '@tailwindcss/vite'
+import { existsSync } from 'node:fs'
+
+// Load secrets from a separate, git-ignored file (does not override real env vars)
+if (existsSync('.env.secrets')) {
+  process.loadEnvFile('.env.secrets')
+}
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -23,6 +29,10 @@ export default defineNuxtConfig({
 
     public: {
       cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME,
+      contactEmail: process.env.CONTACT_EMAIL,
+      instagramUrl: process.env.INSTAGRAM_URL,
+      twitterUrl: process.env.TWITTER_URL,
+      linkedinUrl: process.env.LINKEDIN_URL,
     },
   },
 })
