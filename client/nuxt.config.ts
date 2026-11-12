@@ -11,6 +11,11 @@ export default defineNuxtConfig({
   modules: ['@nuxt/image', '@nuxt/ui'],
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
+  app: {
+    head: {
+      link: [{ rel: 'icon', type: 'image/png', href: '/api/favicon' }],
+    },
+  },
   css: ['./app/assets/css/main.css'],
   vite: {
     plugins: [tailwindcss()],
