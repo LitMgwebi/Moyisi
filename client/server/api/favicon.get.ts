@@ -15,11 +15,13 @@ export default defineEventHandler(async (event) => {
     if (logo) {
       const url = cloudinary.url(logo.public_id, {
         format: 'png',
+        // A new upload gets a new version, so CDN and browser caches miss
+        version: logo.version,
         transformation: [{ width: 64, height: 64, crop: 'fill' }],
       })
 
-      // Cache briefly so the tab icon isn't re-queried on every request
-      setHeader(event, 'Cache-Control', 'public, max-age=3600')
+      // Short cache: the redirect target is versioned, so changes show up quickly
+      setHeader(event, 'Cache-Control', 'public, max-age=60')
       return sendRedirect(event, url, 302)
     }
   } catch (error) {

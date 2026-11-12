@@ -41,16 +41,11 @@
           Explore Gallery
         </NuxtLink>
       </div>
-
-     
-
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { ChevronDown } from 'lucide-vue-next'
-
 // ✅ Motion configs
 const headingMotion = {
   initial: { opacity: 0, y: 30 },
